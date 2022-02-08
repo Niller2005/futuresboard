@@ -212,7 +212,7 @@ def select_latest_income_symbol(conn, symbol):
 
 # position interactions
 def create_position(conn, position):
-    sql = """ INSERT INTO positions(unrealizedProfit, leverage, entryPrice, positionAmt, symbol, positionSide) VALUES(?,?,?,?,?,?) """
+    sql = """ INSERT INTO positions(unrealizedProfit, leverage, entryPrice, positionAmt, positionSide, symbol) VALUES(?,?,?,?,?,?) """
     cur = conn.cursor()
     cur.execute(sql, position)
 
