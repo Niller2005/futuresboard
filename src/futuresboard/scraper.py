@@ -212,20 +212,20 @@ def select_latest_income_symbol(conn, symbol):
 
 # position interactions
 def create_position(conn, position):
-    sql = "INSERT INTO positions(unrealizedProfit, leverage, entryPrice, positionAmt, symbol, positionSide) VALUES (?,?,?,?,?,?)"
+    sql = """ INSERT INTO positions(unrealizedProfit, leverage, entryPrice, positionAmt, symbol, positionSide) VALUES(?,?,?,?,?,?) """
     cur = conn.cursor()
     cur.execute(sql, position)
 
 
 def update_position(conn, position):
-    sql = "UPDATE positions SET unrealizedProfit = ?, leverage = ?, entryPrice = ?, positionAmt = ?, positionSide = ? WHERE symbol = ?"
+    sql = """ UPDATE positions SET unrealizedProfit = ?, leverage = ?, entryPrice = ?, positionAmt = ? WHERE symbol = ? AND positionSide = ? """
     cur = conn.cursor()
     cur.execute(sql, position)
 
 
 def select_position(conn, symbol):
     cur = conn.cursor()
-    cur.execute("SELECT unrealizedProfit FROM positions WHERE symbol = ? LIMIT 0, 1", [symbol])
+    cur.execute("SELECT unrealizedProfit FROM positions WHERE symbol = ? LIMIT 0, 1", (symbol,))
     return cur.fetchone()
 
 
@@ -333,8 +333,8 @@ def _scrape(app=None):
                         int(position["leverage"]),
                         float(position["entryPrice"]),
                         float(position["positionAmt"]),
-                        position["positionSide"],
                         position["symbol"],
+                        position["positionSide"],
                     )
                     unrealizedProfit = select_position(conn, position["symbol"])
                     if unrealizedProfit is None:

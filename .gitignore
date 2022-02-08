@@ -1,3 +1,7 @@
 src/futuresboard/version.py
 config/futures.db
 config/config.json
+
+build/
+
+src/futuresboard.egg-info/
