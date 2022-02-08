@@ -218,7 +218,7 @@ def create_position(conn, position):
 
 
 def update_position(conn, position):
-    sql = """ UPDATE positions SET unrealizedProfit = ?, leverage = ?, entryPrice = ?, positionAmt = ? WHERE symbol = ? AND positionSide = ? """
+    sql = """ UPDATE positions SET unrealizedProfit = ?, leverage = ?, entryPrice = ?, positionAmt = ?, positionSide = ? WHERE symbol = ? """
     cur = conn.cursor()
     cur.execute(sql, position)
 
@@ -333,8 +333,8 @@ def _scrape(app=None):
                         int(position["leverage"]),
                         float(position["entryPrice"]),
                         float(position["positionAmt"]),
-                        position["symbol"],
                         position["positionSide"],
+                        position["symbol"],
                     )
                     unrealizedProfit = select_position(conn, position["symbol"])
                     if unrealizedProfit is None:
