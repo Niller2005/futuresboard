@@ -59,7 +59,7 @@ class Config(BaseModel):
     AUTO_SCRAPE_INTERVAL: int = 300
     DISABLE_AUTO_SCRAPE: bool = False
     HOST: Optional[IPvAnyInterface] = IPvAnyInterface.validate("0.0.0.0")  # type: ignore[assignment]
-    PORT: Optional[int] = Field(5000, ge=1, le=65535)
+    PORT: Optional[int] = Field(5050, ge=1, le=65535)
     API_KEY: str
     API_SECRET: str
 

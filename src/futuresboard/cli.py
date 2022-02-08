@@ -41,7 +41,7 @@ def main():
         type=IPvAnyInterface.validate,
     )
     server_settings.add_argument(
-        "--port", type=int, default=None, help="Server port. Default: 5000"
+        "--port", type=int, default=None, help="Server port. Default: 5050"
     )
     args = parser.parse_args()
 
