@@ -225,7 +225,7 @@ def update_position(conn, position):
 
 def select_position(conn, symbol):
     cur = conn.cursor()
-    cur.execute("SELECT unrealizedProfit FROM positions WHERE symbol = ? LIMIT 0, 1", (symbol,))
+    cur.execute("SELECT unrealizedProfit FROM positions WHERE symbol = ? AND positionSide = ? LIMIT 0, 1", (symbol[0], symbol[1], ))
     return cur.fetchone()
 
 
@@ -336,7 +336,7 @@ def _scrape(app=None):
                         position["positionSide"],
                         position["symbol"],
                     )
-                    unrealizedProfit = select_position(conn, position["symbol"])
+                    unrealizedProfit = select_position(conn, [position["symbol"], position["positionSide"]])
                     if unrealizedProfit is None:
                         create_position(conn, position_row)
                         new_positions += 1
@@ -400,7 +400,8 @@ def _scrape(app=None):
         responseHeader, responseJSON = send_signed_request(
             "GET", "/private/linear/position/list", params, signature="sign"
         )
-        weightused = int(responseJSON["rate_limit_status"])
+        if "rate_limit_status" in responseJSON:
+            weightused = int(responseJSON["rate_limit_status"])
 
         with create_connection(current_app.config["DATABASE"]) as conn:
             delete_all_orders(conn)
@@ -430,7 +431,7 @@ def _scrape(app=None):
                         position["data"]["symbol"],
                         positionside,
                     )
-                    unrealizedProfit = select_position(conn, position["data"]["symbol"])
+                    unrealizedProfit = select_position(conn, [position["data"]["symbol"], positionside])
                     if unrealizedProfit is None:
                         create_position(conn, position_row)
                         new_positions += 1
@@ -445,7 +446,8 @@ def _scrape(app=None):
                     responseHeader, responseJSON = send_signed_request(
                         "GET", "/private/linear/order/search", params, signature="sign"
                     )
-                    weightused = int(responseJSON["rate_limit_status"])
+                    if "rate_limit_status" in responseJSON:
+                        weightused = int(responseJSON["rate_limit_status"])
 
                     for order in responseJSON["result"]:
 
